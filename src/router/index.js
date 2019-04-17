@@ -12,8 +12,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: loadView('HelloWorld'),
+      name: 'Index',
+      component: loadView('Index'),
       meta:{
         index:1,
         auth:true,
