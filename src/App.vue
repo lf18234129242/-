@@ -38,6 +38,23 @@ html,body,#app {
   overflow: auto;
 }
 
+.van-button--large{
+  width: 19.467rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  display: block;
+  margin: auto;
+  border-radius: .533rem;
+}
+.van-button--default{
+  color: #ffffff;
+  border: none;
+  background: #f2cc2b;
+}
+.van-button__text{
+  font-size: 1.5rem;
+}
+
 .fold-left-enter-active {
     animation-name: fold-left-in;
     animation-duration: .3s;

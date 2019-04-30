@@ -5,6 +5,10 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 
+import {Button, Checkbox} from 'vant'
+
+Vue.use(Button).use(Checkbox)
+
 Vue.config.productionTip = false
 
 //把 `******` 加到 `Vue` 的原型中
