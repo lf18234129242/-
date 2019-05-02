@@ -24,12 +24,20 @@ export default {
       checked:true,
     }
   },
+  mounted(){
+    this.checked = this.$route.query.agree;
+  },
   methods: {
     begin() {
-      this.disabled_btn = true;
+      if(this.checked){
+        this.disabled_btn = true;
+        this.$router.push('/pay')
+      }else{
+        this.$toast('请您先阅读并同意用户安全使用须知')
+      }
     },
     use_know(){
-      console.log('“用户安全使用须知”')
+      this.$router.push('/usageNotice')
     },
   },
 }

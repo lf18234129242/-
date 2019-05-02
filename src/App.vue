@@ -38,6 +38,8 @@ html,body,#app {
   overflow: auto;
 }
 
+
+
 .van-button--large{
   width: 19.467rem;
   height: 2.5rem;
