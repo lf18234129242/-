@@ -36,6 +36,7 @@ html,body,#app {
   margin: 0;
   padding: 0;
   overflow: auto;
+  background: #f2f2f2;
 }
 
 

@@ -49,6 +49,7 @@
             let min = 24,
             s = 60,
             timer = null;
+            this.circle_text = `剩余${min}分${s}秒`
             timer = setInterval(() => {
                 s--;
                 if(s < 0){

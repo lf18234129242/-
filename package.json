@@ -14,6 +14,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-plugin-import": "^1.11.0",
+    "clipboard": "^2.0.4",
+    "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
     "vant": "^1.6.16",
     "vue": "^2.5.2",

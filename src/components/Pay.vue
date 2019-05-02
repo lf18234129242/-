@@ -207,6 +207,7 @@
                         span{
                             font-size: 0.64rem;
                             color: #9f9e99;
+                            text-decoration: line-through;
                         }
                     }
                 }

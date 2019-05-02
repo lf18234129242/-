@@ -10,7 +10,7 @@
     <p class="introduction">帮助平衡体温，增强血液循环，放松神经肌肉，促进身体代谢</p>
     <van-button @click="begin" :disabled="disabled_btn" size="large">点击开始汗蒸</van-button>
     <div class="use-know">
-      <van-checkbox v-model="checked">我已阅读<i @click="use_know">“用户安全使用须知”</i></van-checkbox>
+      <van-checkbox v-model="checked" shape="square">我已阅读<i @click="use_know">“用户安全使用须知”</i></van-checkbox>
     </div>
   </div>
 </template>
@@ -103,9 +103,9 @@ export default {
 }
 </style>
 <style>
-.van-checkbox__icon--round .van-icon{
+/* .van-checkbox__icon--round .van-icon{
   border-radius: 0;
-}
+} */
 .van-checkbox__icon--checked .van-icon{
   border-color:#f1cb28;
   background: #f1cb28;

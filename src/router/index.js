@@ -60,5 +60,15 @@ export default new Router({
         title:'我的卡券'
       }
     },
+    {
+      path: '/orderList',
+      name: 'OrderList',
+      component: loadView('OrderList'),
+      meta:{
+        index:1,
+        auth:true,
+        title:'我的订单'
+      }
+    },
   ]
 })
