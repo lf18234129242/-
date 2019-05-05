@@ -11,6 +11,16 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      path: '/Author',
+      name: 'Author',
+      component: loadView('Author'),
+      meta:{
+        index:0,
+        auth:true,
+        title:'正在登录'
+      }
+    },
+    {
       path: '/',
       name: 'Index',
       component: loadView('Index'),

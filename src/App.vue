@@ -30,13 +30,13 @@ export default {
 <style>
 @import url(./assets/css/base.css);
 html,body,#app {
-  position: fixed;
+  /* position: fixed; */
   width: 100%;
-  height: 100%;
+  height: 100vh;
   margin: 0;
   padding: 0;
-  overflow: auto;
-  background: #f2f2f2;
+  /* overflow: auto; */
+  background: #fafafa;
 }
 
 
