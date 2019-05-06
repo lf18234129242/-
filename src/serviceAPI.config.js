@@ -11,6 +11,8 @@ const URL = {
     allCouponRecord:BASEURL + '/h5/coupon/allCouponRecord',     //查询所有的卡券
     coupon_pay:BASEURL + '/h5/coupon/pay',     //卡券使用
     orderList:BASEURL + '/h5/orderList',     //查询订单
+    openid:'oPPuL1WYsiYAqM29B3iK5iQ4WVHc',
+    deviceCode:'865533030154268',
 }
 
 module.exports = URL;

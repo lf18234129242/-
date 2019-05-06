@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import url from './../serviceAPI.config.js'
 export default {
   name: 'HelloWorld',
   data () {
@@ -24,10 +25,28 @@ export default {
       checked:true,
     }
   },
+  created(){
+    this.hasActivity();
+  },
   mounted(){
     this.checked = this.$route.query.agree;
   },
   methods: {
+    //查询是否有新用户免费体验活动
+    hasActivity(){
+      this.axios({
+        url:url.hasActivity,
+        method:'get',
+        params:{
+          deviceCode:url.deviceCode,
+        }
+      }).then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    // 开始汗蒸
     begin() {
       if(this.checked){
         this.disabled_btn = true;

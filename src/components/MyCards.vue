@@ -1,17 +1,23 @@
 <template>
     <div class="MyCards">
-        <div :class="['card',item.isUse ? 'card-bg-fff' : 'card-bg-e4e4e4']" v-for="(item,index) in cardList" :key="index">
+        <div
+            :class="['card',!item.status ? 'card-bg-fff' : 'card-bg-e4e4e4']" 
+            v-for="(item,index) in cardList" 
+            :key="index"
+            @click="checkCard"
+        >
             <ul>
-                <li>{{item.use_address}}</li>
-                <li>{{item.use_status}}</li>
+                <li>{{item.storeName}}</li>
+                <li>{{item.status == 0 ? '可使用' : '已使用'}}</li>
             </ul>
-            <ul>卡券编号：{{item.card_num}}</ul>
-            <ul>使用期限：{{item.use_time}}</ul>
+            <ul>卡券编号：{{item.orderId}}</ul>
+            <ul>使用期限：{{item.createTime | createTime}}-{{item.expiryDate | createTime}}</ul>
         </div>
     </div>
 </template>
 
 <script>
+import url from './../serviceAPI.config.js'
     export default {
         data() {
             return {
@@ -45,6 +51,45 @@
                         isUse:false
                     },
                 ]
+            }
+        },
+        created(){
+            let pay = this.$route.query.pay;
+            if(pay !== undefined && pay !== undefined){
+                this.cardList = JSON.parse(this.$route.query.canUseCard)
+            }else{
+                this.allCouponRecord()
+            }
+        },
+        filters:{
+            createTime(value){
+                return value.substring(0,10)
+            },
+        },
+        methods: {
+            // 查询所有的卡券
+            allCouponRecord(){
+                this.axios({
+                    method:'get',
+                    url:url.allCouponRecord,
+                    params:{
+                        openId:url.openid,
+                    }
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        this.cardList = res.data.result;
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            checkCard() {
+                if(this.$route.query.pay == true){
+                    this.$router.replace('/pay');
+                    this.$router.go(-1)
+                    sessionStorage.setItem('radio',true)
+                }
             }
         },
     }
