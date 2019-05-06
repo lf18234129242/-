@@ -82,27 +82,40 @@ import url from './../serviceAPI.config.js'
                     this.radio = ''
                 }else{
                     this.radio = 0;
+                    this.checked_usecard = false;
+                    this.checked_wechatPay = false;
                 }
             },
             checked_usecard(){
                 if(this.checked_usecard){
-                    this.canUseCard_id = this.canUseCard[0].id
+                    this.canUseCard_id = this.canUseCard[0].id;
+                    this.checked_buycard = false;
+                    this.checked_wechatPay = false;
+                }
+            },
+            checked_wechatPay(){
+                if(this.checked_wechatPay){
+                    this.checked_usecard = false;
+                    this.checked_buycard = false;
                 }
             },
         },
         computed:{
             total_price(){
-                let price_1 = 0,
-                    price_2 = 0,
-                    price_3 = this.initial_price;
+                // let price_1 = 0,
+                //     price_2 = 0,
+                //     price_3 = this.initial_price;
                 if(this.checked_usecard){
-                    price_1 = -15;
+                    // price_1 = -15;
+                    return 0;
+                }else if(this.checked_buycard){
+                    // price_2 = this.canBuy_cardsList[this.radio].discountPrice;
+                    return this.canBuy_cardsList[this.radio].discountPrice;
+                    this.canBuy_card_id = this.canBuy_cardsList[this.radio].id;
+                }else{
+                    return this.initial_price
                 }
-                if(this.checked_buycard){
-                    price_2 = this.canBuy_cardsList[this.radio].discountPrice
-                    this.canBuy_card_id = this.canBuy_cardsList[this.radio].id
-                }
-                return price_1+price_2+price_3;
+                // return price_1+price_2+price_3;
             },
         },
         created(){
