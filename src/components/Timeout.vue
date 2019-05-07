@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import url from './../serviceAPI.config.js'
     export default {
         data() {
             return {
@@ -44,6 +45,9 @@
                 circle_speed:60/(25*60),
                 currentRate:0,
             }
+        },
+        created(){
+            
         },
         mounted(){
             let min = 24,
@@ -80,6 +84,7 @@
 .Timeout{
     width: 100%;
     position: absolute;
+    background: #fafafa;
     h1{
         font-size: 2.24rem;
         height:4rem;

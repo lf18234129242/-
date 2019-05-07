@@ -5,9 +5,9 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 
-import {Button, Checkbox, Toast, Circle, Tab, Tabs, RadioGroup, Radio} from 'vant'
+import {Button, Checkbox, Toast, Circle, Tab, Tabs, RadioGroup, Radio, Popup} from 'vant'
 
-Vue.use(Button).use(Checkbox).use(Toast).use(Circle).use(Tab).use(Tabs).use(RadioGroup).use(Radio)
+Vue.use(Button).use(Checkbox).use(Toast).use(Circle).use(Tab).use(Tabs).use(RadioGroup).use(Radio).use(Popup)
 
 Vue.config.productionTip = false
 

@@ -6,7 +6,7 @@
         </div>
         <div class="card-box use-card">
             <div class="div flex">
-                <p>使用卡券支付（可使用10张,<span @click="toMyCards">查看详情</span>）</p>
+                <p>使用卡券支付（可使用{{canUseCard.length}}张,<span @click="toMyCards">查看详情</span>）</p>
                 <van-checkbox
                     v-model="checked_usecard"
                     checked-color="#f1ca24"
@@ -54,6 +54,7 @@
 
 <script>
 import url from './../serviceAPI.config.js'
+import wx from 'weixin-js-sdk'
     export default {
         data() {
             return {
@@ -67,6 +68,7 @@ import url from './../serviceAPI.config.js'
                 disabled_btn:false,
                 canUseCard:[],      //可用卡券
                 canUseCard_id:'',      //可用卡券id
+                //canUseCard_num:'',
                 initial_price:15,         //初始价
 
             }
@@ -84,11 +86,11 @@ import url from './../serviceAPI.config.js'
                     this.radio = 0;
                     this.checked_usecard = false;
                     this.checked_wechatPay = false;
+                    this.canBuy_card_id = this.canBuy_cardsList[this.radio].id;
                 }
             },
             checked_usecard(){
                 if(this.checked_usecard){
-                    this.canUseCard_id = this.canUseCard[0].id;
                     this.checked_buycard = false;
                     this.checked_wechatPay = false;
                 }
@@ -102,20 +104,13 @@ import url from './../serviceAPI.config.js'
         },
         computed:{
             total_price(){
-                // let price_1 = 0,
-                //     price_2 = 0,
-                //     price_3 = this.initial_price;
                 if(this.checked_usecard){
-                    // price_1 = -15;
                     return 0;
                 }else if(this.checked_buycard){
-                    // price_2 = this.canBuy_cardsList[this.radio].discountPrice;
                     return this.canBuy_cardsList[this.radio].discountPrice;
-                    this.canBuy_card_id = this.canBuy_cardsList[this.radio].id;
                 }else{
                     return this.initial_price
                 }
-                // return price_1+price_2+price_3;
             },
         },
         created(){
@@ -128,9 +123,143 @@ import url from './../serviceAPI.config.js'
             }
         },
         methods: {
-            pay() {
-                this.disabled_btn = true;
-                this.$router.push('/timeout')
+            pay(){
+                if(this.checked_usecard){
+                    this.coupon_pay();
+                }else if(this.checked_buycard){
+                    this.buy_cardPackage();
+                }else if(this.checked_wechatPay){
+                    this.wechat_pay();
+                }
+                // this.disabled_btn = true;
+                // this.$router.push('/timeout')
+            },
+            // 普通微信支付
+            wechat_pay(){
+                this.axios({
+                    url:url.pay,
+                    methods:'get',
+                    params:{
+                        openId:url.openid,
+                        device:url.deviceCode,  
+                        payMethod:'wechat',
+                    }
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        wx.config({
+                            appId: res.data.result.appId, // 必填，公众号的唯一标识
+                            timestamp: res.data.result.timestamp, // 必填，生成签名的时间戳
+                            nonceStr: res.data.result.nonceStr, // 必填，生成签名的随机串
+                            package: res.data.result.package,
+                            paySign: res.data.result.paySign,
+                            signType: res.data.result.signType,
+                        });
+
+                        wx.ready(function () {
+                            let options = res.data.result;
+                            console.log(options)
+                            if(options){
+                                // 支付成功后的操作
+                                options.success = function () {
+                                    window.location.href = ``;
+                                };
+                                
+                                //  取消支付的操作
+                                options.cancel = function () {
+                                    pay_order = true;
+                                };
+                                
+                                // 支付失败的处理 
+                                options.fail = function () {
+                                    pay_order = true;
+                                    this.wechatPay_button = false;
+                                };
+                                // 传入参数，发起JSAPI支付
+                                wx.chooseWXPay(options);
+                            }else{
+                                this.$toast(`支付失败，请稍后再试！`)
+                                this.wechatPay_button = false;
+                            }
+                        })
+                    }else if(res.data.code == '-1'){
+                        this.$toast(`${res.data.msg}`)
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            // 卡券支付
+            coupon_pay(){
+                this.axios({
+                    url:url.coupon_pay,
+                    method:'get',
+                    params:{
+                        openId:url.openid,
+                        device:url.deviceCode,
+                        couponId:this.canUseCard_id
+                    }
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data.code == -1){
+                        this.$toast(res.data.msg)
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            // 购买卡券包
+            buy_cardPackage(){
+                this.axios({
+                    url:url.buy_cardPackage,
+                    method:'get',
+                    params:{
+                        openId:url.openid,
+                        device:url.deviceCode,
+                        pid:this.canBuy_card_id
+                    }
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        wx.config({
+                            appId: res.data.result.appId, // 必填，公众号的唯一标识
+                            timestamp: res.data.result.timestamp, // 必填，生成签名的时间戳
+                            nonceStr: res.data.result.nonceStr, // 必填，生成签名的随机串
+                            package: res.data.result.package,
+                            paySign: res.data.result.paySign,
+                            signType: res.data.result.signType,
+                        });
+
+                        wx.ready(function () {
+                            let options = res.data.result;
+                            console.log(options)
+                            if(options){
+                                // 支付成功后的操作
+                                options.success = function () {
+                                    window.location.href = ``;
+                                };
+                                
+                                //  取消支付的操作
+                                options.cancel = function () {
+                                    pay_order = true;
+                                };
+                                
+                                // 支付失败的处理 
+                                options.fail = function () {
+                                    pay_order = true;
+                                    this.wechatPay_button = false;
+                                };
+                                // 传入参数，发起JSAPI支付
+                                wx.chooseWXPay(options);
+                            }else{
+                                this.$toast(`支付失败，请稍后再试！`)
+                                this.wechatPay_button = false;
+                            }
+                        })
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
             },
             //查询上架可购买卡券包
             findAllPackageOnSale(){
@@ -164,6 +293,8 @@ import url from './../serviceAPI.config.js'
                         this.canUseCard = res.data.result;
                         if(this.canUseCard.length == 0){
                             this.disabled_usecard = true;
+                        }else{
+                            this.canUseCard_id = this.canUseCard[0].id
                         }
                     }
                 }).catch((err)=>{

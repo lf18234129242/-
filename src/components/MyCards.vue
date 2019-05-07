@@ -4,14 +4,14 @@
             :class="['card',!item.status ? 'card-bg-fff' : 'card-bg-e4e4e4']" 
             v-for="(item,index) in cardList" 
             :key="index"
-            @click="checkCard"
+            @click="checkCard(index)"
         >
             <ul>
                 <li>{{item.storeName}}</li>
                 <li>{{item.status == 0 ? '可使用' : '已使用'}}</li>
             </ul>
-            <ul>卡券编号：{{item.orderId}}</ul>
-            <ul>使用期限：{{item.createTime | createTime}}-{{item.expiryDate | createTime}}</ul>
+            <ul>卡券编号：{{item.id}}</ul>
+            <ul>使用期限：{{item.startTime}}-{{item.endTime}}</ul>
         </div>
     </div>
 </template>
@@ -61,11 +61,11 @@ import url from './../serviceAPI.config.js'
                 this.allCouponRecord()
             }
         },
-        filters:{
-            createTime(value){
-                return value.substring(0,10)
-            },
-        },
+        // filters:{
+        //     createTime(value){
+        //         return value.substring(0,10)
+        //     },
+        // },
         methods: {
             // 查询所有的卡券
             allCouponRecord(){
@@ -84,11 +84,12 @@ import url from './../serviceAPI.config.js'
                     console.log(err)
                 })
             },
-            checkCard() {
+            checkCard(index) {
                 if(this.$route.query.pay == true){
                     this.$router.replace('/pay');
                     this.$router.go(-1)
                     sessionStorage.setItem('radio',true)
+                    sessionStorage.setItem('id',this.cardList[index].id)
                 }
             }
         },

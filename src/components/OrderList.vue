@@ -1,28 +1,49 @@
 <template>
     <div class="OrderList">
-        <van-tabs type="card">
+        <van-tabs
+            type="card"
+            @click="onClickTab"
+            animated
+            swipeable
+            v-model="active"
+        >
             <van-tab title="汗蒸订单">
-                <div :class="['card',item.isUse ? 'card-bg-fff' : 'card-bg-e4e4e4']" v-for="(item,index) in hanzhengList" :key="index">
+                    <!-- :class="['card',item.isUse ? 'card-bg-fff' : 'card-bg-e4e4e4']"  -->
+                <div
+                    class="card card-bg-fff" 
+                    v-for="(item,index) in hanzhengList" 
+                    :key="index"
+                >
                     <ul>
-                        <li>{{item.use_time}}</li>
-                        <li>{{item.use_status}}</li>
+                        <li>{{item.create_time}}</li>
+                        <li v-if="item.order_status == 1">订单生成</li>
+                        <li v-else-if="item.order_status == 2">已付款</li>
+                        <li v-else-if="item.order_status == 3">已完成</li>
+                        <li v-else-if="item.order_status == 4">超时</li>
+                        <li v-else-if="item.order_status == 5">已退款</li>
                     </ul>
-                    <ul>门店名称：{{item.use_address}}</ul>
+                    <ul>门店名称：{{item.store_name}}</ul>
                     <ul>
-                        <li>订单编号：{{item.order_num}}</li>
+                        <li>订单编号：{{item.id}}</li>
                         <li class="btn_1" :data-clipboard-text="copyOrderNum" @click="copyThisOrderNum(index)">复制编号</li>
                     </ul>
                 </div>
             </van-tab>
             <van-tab title="卡券订单">
-                <div :class="['card',item.isUse ? 'card-bg-fff' : 'card-bg-e4e4e4']" v-for="(item,index) in cardList" :key="index">
+                <div 
+                    class="card card-bg-fff" 
+                    v-for="(item,index) in cardList" 
+                    :key="index"
+                >
                     <ul>
-                        <li>{{item.use_time}}</li>
-                        <li>{{item.use_status}}</li>
+                        <li>{{item.orderTime}}</li>
+                        <li v-if="item.status == 1">活动创建未开始</li>
+                        <li v-else-if="item.status == 2">活动已开始</li>
+                        <li v-else-if="item.status == 3">活动已结束</li>
                     </ul>
-                    <ul>门店名称：{{item.use_address}}</ul>
+                    <ul>门店名称：{{item.storeName}}</ul>
                     <ul>
-                        <li>订单编号：{{item.order_num}}</li>
+                        <li>订单编号：{{item.id}}</li>
                         <li class="btn_2" :data-clipboard-text="copyCardNum" @click="copyThisCardNum(index)">复制编号</li>
                     </ul>
                 </div>
@@ -33,142 +54,19 @@
 
 <script>
 import Clipboard from 'clipboard'
+import url from './../serviceAPI.config.js'
     export default {
         data() {
             return {
-                hanzhengList:[
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江极乐汤金沙江',
-                        use_status:'已完成',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江极乐汤金沙江',
-                        use_status:'已完成',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                ],
-                cardList: [
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已完成',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已完成',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                    {
-                        use_time:'2019/1/1 18.09',
-                        use_address:'极乐汤金沙江',
-                        use_status:'已取消',
-                        order_num:'123456789',
-                        isUse:true
-                    },
-                ],
+                hanzhengList:[],
+                cardList: [],
                 copyOrderNum:'',
                 copyCardNum:'',
+                active:0,
             }
+        },
+        created(){
+            this.orderList();
         },
         methods: {
             copyThisOrderNum(index) {
@@ -181,6 +79,65 @@ import Clipboard from 'clipboard'
                 this.copyCardNum = this.cardList[index].order_num;
                 this.$toast('复制成功')
             },
+            // 切换tabs
+            onClickTab(){
+                if(this.active == 0){
+                    this.orderList()
+                }else if(this.active == 1){
+                    this.packageOrder();
+                }
+            },
+            // 查询卡券订单
+            packageOrder(){
+                this.axios({
+                    url:url.packageOrder,
+                    method:'post',
+                    params:{
+                        openId:url.openid,
+                    }
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        this.cardList = res.data.result;
+                        console.log(this.cardList)
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            // 查询汗蒸订单
+            orderList(){
+                this.axios({
+                    url:url.orderList,
+                    method:'post',
+                    params:{
+                        openId:url.openid,
+                        page:'1',
+                        pageSize:'10',
+                    }
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        for(let i=0;i<res.data.result.list.length;i++){
+                            this.hanzhengList.push(res.data.result.list[i]);
+                        }
+                        this.hanzhengList = this.unique(this.hanzhengList)
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            // 对象数组查重
+            unique(arr){
+                let unique = {};
+                arr.forEach(function(item){
+                    unique[JSON.stringify(item)]=item;
+                })
+                arr = Object.keys(unique).map(function(u){ 
+                    return JSON.parse(u);
+                })
+                return arr;
+            }
         },
     }
 </script>
