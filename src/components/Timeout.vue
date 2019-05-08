@@ -1,7 +1,7 @@
 <template>
     <div class="Timeout">
         <h1>元气汗蒸已开启</h1>
-        <h2>订单编号：{{orderNum}}</h2>
+        <h2>订单编号：{{orderId}}</h2>
         <van-circle
             v-model="currentRate"
             color="#f1cb28"
@@ -39,42 +39,94 @@ import url from './../serviceAPI.config.js'
     export default {
         data() {
             return {
-                orderNum: '1234567890123456789',
+                orderId: '',
                 circle_text:'',
-                circle_rate:60,
-                circle_speed:60/(25*60),
+                circle_rate:100,
+                circle_speed:0.04,
                 currentRate:0,
+                last_Min:'',
+                last_S:'',
             }
         },
         created(){
-            
+            this.axios({
+                url:url.orderDetail,
+                method:'get',
+                params:{
+                    openId:url.openid,
+                    deviceCode:url.deviceCode
+                }
+            }).then((res)=>{
+                console.log(res)
+                if(res.data.code == 200){
+                    this.orderId = res.data.result.orderId;
+                    var endTime = new Date(res.data.result.endTime)
+                    var nowTime = new Date();
+                    // 结束时间
+                    var end_H = endTime.getHours();  
+                    var end_Min = endTime.getMinutes();  
+                    var end_S = endTime.getSeconds();
+                    // 当前时间
+                    var now_H = nowTime.getHours();  
+                    var now_Min = nowTime.getMinutes();  
+                    var now_S = nowTime.getSeconds();  
+                    // 剩余时间
+                    let last_H,last_Min,last_S;
+                    // 计算剩余时间
+                    if(end_S<now_S){
+                        end_Min = end_Min-1;
+                        last_S = end_S + 60 - now_S;
+                    }else{
+                        last_S = end_S - now_S;
+                    }
+                    if(end_Min<now_Min){
+                        end_H = end_H-1;
+                        last_Min = end_Min + 60 - now_Min;
+                    }else{
+                        last_Min = end_Min - now_Min;
+                    }
+                    last_H = end_H - now_H
+                    console.log(`${last_H}--${last_Min}--${last_S}`)
+                    
+                    // 环形进度条的进度
+                    // this.currentRate = 100-Math.round((last_Min/25 + (last_S/60))*100)
+                    this.currentRate = 100-Math.round((20/25 + (59/1500))*100)
+                    console.log(this.currentRate)
+                    // 计算环形进度条中间的文字
+                    let min = last_Min,
+                    s = last_S,
+                    timer = null;
+                    this.circle_text = `剩余${min}分${s}秒`
+                    timer = setInterval(() => {
+                        s--;
+                        if(s < 0){
+                            min--;
+                            s=59;
+                        }else if(min == 0 && s == 0){
+                            // this.circle_text = `剩余00分00秒`
+                            this.circle_text = `汗蒸体验已结束`
+                            clearInterval(timer)
+
+                        }
+                        if(s<10){
+                            s = '0' + s;
+                        }
+                        if(min < 10){
+                            min = ('0' + min).slice(-2)
+                        }
+                        this.circle_text = `剩余${min}分${s}秒`
+                    }, 1000);
+                }
+            }).catch((err)=>{
+                console.log(err)
+            })
         },
         mounted(){
-            let min = 24,
-            s = 60,
-            timer = null;
-            this.circle_text = `剩余${min}分${s}秒`
-            timer = setInterval(() => {
-                s--;
-                if(s < 0){
-                    min--;
-                    s=59;
-                }else if(min == 0 && s == 0){
-                    this.circle_text = `剩余00分00秒`
-                    clearInterval(timer)
-                }
-                if(s<10){
-                    s = '0' + s;
-                }
-                if(min < 10){
-                    min = ('0' + min).slice(-2)
-                }
-                this.circle_text = `剩余${min}分${s}秒`
-            }, 1000);
+            
         },
         methods: {
             callMe() {
-                window.location.href = 'tel://110'
+                window.location.href = 'https://www.wenjuan.com/s/2AzaQj/'
             }
         },
     }

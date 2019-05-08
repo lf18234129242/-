@@ -18,7 +18,7 @@
       <div class="show-popup-box">
         <div class="show-popup">
           <div class="show-popup-child">
-            <h2>限时体验卡券免费领</h2>
+            <h2>{{activityName}}</h2>
             <h3>每人限领1张，10天内有效</h3>
             <van-button size="large" @click="receive">限时领</van-button>
           </div>
@@ -39,6 +39,8 @@ export default {
       show_popup: true,    //查询是否有新用户免费体验活动
       time:'',
       price:'',
+      activityName:'',    //"新用户免费领取"
+      activityId:'',    //"新用户免费领取 id
     }
   },
   created(){
@@ -75,13 +77,12 @@ export default {
         params:{
           deviceCode:url.deviceCode,
           openId:url.openid,
-          activityId:'',
+          activityId:this.activityId,
         }
       }).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
           this.$toast(res.data.message)
-
         }else{
           this.$toast(res.data.message)
         }
@@ -100,6 +101,10 @@ export default {
         }
       }).then((res) => {
         console.log(res)
+        if(res.data.code == 200){
+          this.activityName = res.data.result.activityName;
+          this.activityId = res.data.result.id;
+        }
       }).catch((err) => {
         console.log(err)
       })
