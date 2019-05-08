@@ -41,7 +41,7 @@ import url from './../serviceAPI.config.js'
             return {
                 orderId: '',
                 circle_text:'',
-                circle_rate:100,
+                circle_rate:0,
                 circle_speed:0.04,
                 currentRate:0,
                 last_Min:'',
@@ -89,9 +89,8 @@ import url from './../serviceAPI.config.js'
                     console.log(`${last_H}--${last_Min}--${last_S}`)
                     
                     // 环形进度条的进度
-                    // this.currentRate = 100-Math.round((last_Min/25 + (last_S/60))*100)
-                    this.currentRate = 100-Math.round((20/25 + (59/1500))*100)
-                    console.log(this.currentRate)
+                    this.circle_rate = 100 - Math.round((last_Min/25 + (last_S/1500))*100)
+                    this.currentRate = this.circle_rate;
                     // 计算环形进度条中间的文字
                     let min = last_Min,
                     s = last_S,
