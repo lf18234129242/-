@@ -13,6 +13,8 @@ const URL = {
     orderList:BASEURL + '/h5/orderList',     //查询订单
     getDevice:BASEURL + '/h5/getDevice',     //查询设备普通支付价格和时长
     orderDetail:BASEURL + '/h5/orderDetail',     //倒计时
+    get_wxcode:'https://open.weixin.qq.com/connect/oauth2/authorize',   //获取微信code
+    get_wxopenid:'/wechat/getPageAccessToken',   //获取OpenId
     openid:'o9OZv5g-GyYYdg-Byw1gn2i8IFu0',      //
     deviceCode:'865533030154268',
 }

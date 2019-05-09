@@ -19,6 +19,15 @@ router.beforeEach((to,from,next)=>{
   if (to.meta.title) {
     document.title = to.meta.title
   }
+  // 验证登录
+  let openid = localStorage.getItem('openid')
+  if(to.path !== '/author' && openid==undefined){
+    sessionStorage.setItem('beforeLoginUrl',to.fullPath)    // 保存用户进入的url
+    next('/author')
+    return false;
+  }
+
+
   next()
 })
 
